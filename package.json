@@ -4,10 +4,10 @@
   "description": "bc-nc-news",
   "main": "index.js",
   "scripts": {
-    "start": "PGDATABASE=nc_news_test nodemon listen.js",
+    "start": "nodemon listen.js",
     "setup-dbs": "psql -f ./db/setup.sql",
-    "seed": "PGDATABASE=nc_news_test node ./db/seeds/run-seed.js",
-    "test": "PGDATABASE=nc_news_test jest",
+    "seed": "node ./db/seeds/run-seed.js",
+    "test": "jest",
     "prepare": "husky install"
   },
   "repository": {

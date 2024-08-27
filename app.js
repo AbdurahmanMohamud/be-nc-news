@@ -1,12 +1,11 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topics.controllers");
+const { getApi } = require("./controllers/api.controllers");
 const app = express();
 app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
-app.use((err, req, res, next) => {
-  res.status(404).send({ msg: "Invalid URL" });
-  next(err);
-});
+app.get("/api", getApi);
+
 module.exports = app;
