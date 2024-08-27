@@ -1,4 +1,3 @@
-const { dirname } = require("path");
 const db = require("../db/connection");
 const fs = require("fs/promises");
 const findApi = () => {
