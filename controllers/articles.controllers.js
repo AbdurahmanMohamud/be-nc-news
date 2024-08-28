@@ -1,4 +1,4 @@
-const { findArticle } = require("../models/articles.models");
+const { findArticle, findArticles } = require("../models/articles.models");
 const getArticle = (req, res, next) => {
   const { article_id } = req.params;
   findArticle(article_id)
@@ -6,7 +6,18 @@ const getArticle = (req, res, next) => {
       res.status(200).send(article);
     })
     .catch((err) => {
-      next(err)
+      next(err);
     });
 };
-module.exports = { getArticle };
+
+const getArticles = (req, res, next) => {
+  findArticles()
+    .then((articles) => {
+      res.status(200).send(articles);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getArticle, getArticles };
