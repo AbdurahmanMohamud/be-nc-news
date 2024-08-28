@@ -1,4 +1,8 @@
-const { findArticle, findArticles } = require("../models/articles.models");
+const {
+  findArticle,
+  findArticles,
+  findCommentsById,
+} = require("../models/articles.models");
 const getArticle = (req, res, next) => {
   const { article_id } = req.params;
   findArticle(article_id)
@@ -20,4 +24,15 @@ const getArticles = (req, res, next) => {
     });
 };
 
-module.exports = { getArticle, getArticles };
+const getCommentsById = (req, res, next) => {
+  const { article_id } = req.params;
+  findCommentsById(article_id)
+    .then((comments) => {
+      res.status(200).send(comments);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getArticle, getArticles, getCommentsById };

@@ -108,3 +108,35 @@ describe("/api/articles", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id/comments", () => {
+  test("GET:200, Responds with: an array of comments for the given article_id of which each comment should have the following properties: comment_id, votes, created_at, author, body, article_id, Comments should be served with the most recent comments first.", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then((res) => {
+        const comments = res.body;
+        expect(Array.isArray(comments)).toBe(true);
+        expect(comments.length > 0).toBe(true);
+        comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+        });
+      });
+  });
+  test("GET:404 responds with a 404 status code if id is not found", () => {
+    return request(app).get("/api/articles/123456789/comments").expect(404);
+  });
+  test("GET: 400 responds with a 400 status code if invalid id is given", () => {
+    return request(app)
+      .get("/api/articles/five/comments")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid request");
+      });
+  });
+});
