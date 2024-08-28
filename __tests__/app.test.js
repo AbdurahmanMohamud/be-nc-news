@@ -47,6 +47,7 @@ describe("/api", () => {
       .expect(200)
       .then((response) => {
         const endpoints = response.body;
+        expect(endpoints).toEqual(endpointsData);
         expect(endpoints).toHaveProperty("GET /api");
         expect(endpoints).toHaveProperty("GET /api/topics");
         expect(endpoints).toHaveProperty("GET /api/articles");
@@ -80,6 +81,30 @@ describe("/api/articles/:article_id", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("invalid request");
+      });
+  });
+});
+
+describe("/api/articles", () => {
+  test("GET: 200, Responds with: an articles array of article objects, each of which should have the following properties: author, title, article_id, topic, created_at, votes, article_img_url, comment_count. The articles should also be sorted by date in descending order.", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        const articles = res.body;
+        expect(Array.isArray(articles)).toBe(true);
+        expect(articles.length > 0).toBe(true);
+        articles.forEach((article) => {
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("article_id");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article).toHaveProperty("article_img_url");
+          expect(article).toHaveProperty("comment_count");
+          expect(article).not.toHaveProperty("body");
+        });
       });
   });
 });
