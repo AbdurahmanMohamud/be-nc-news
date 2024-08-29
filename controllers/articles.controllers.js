@@ -2,7 +2,9 @@ const {
   findArticle,
   findArticles,
   findCommentsById,
+  addCommentById,
 } = require("../models/articles.models");
+
 const getArticle = (req, res, next) => {
   const { article_id } = req.params;
   findArticle(article_id)
@@ -35,4 +37,19 @@ const getCommentsById = (req, res, next) => {
     });
 };
 
-module.exports = { getArticle, getArticles, getCommentsById };
+const postCommentById = (req, res, next) => {
+  const { article_id } = req.params;
+  const { username, body } = req.body;
+  
+  addCommentById(body, article_id, username)
+    .then((comment) => {
+      res.status(201).send(comment);
+    })
+    .catch((err) => {
+      console.log(err,"controller")
+      next(err);
+      return err
+    });
+};
+
+module.exports = { getArticle, getArticles, getCommentsById, postCommentById };

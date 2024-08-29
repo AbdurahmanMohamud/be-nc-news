@@ -139,4 +139,54 @@ describe("/api/articles/:article_id/comments", () => {
         expect(res.body.msg).toBe("invalid request");
       });
   });
+  test("POST:201 should add a comment for an article. Request body accepts an object with the following properties:username, body. Responds with the posted comment.", () => {
+    const commentToAdd = {
+      username: "butter_bridge",
+      body: "This is a comment",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(commentToAdd)
+      .expect(201)
+      .then((res) => {
+        const postedComment = res.body.body;
+        expect(postedComment).toBe("This is a comment");
+      });
+  });
+  test("POST:404 responds with a 404 status code if id is not found", () => {
+    const commentToAdd = {
+      username: "lurker",
+      body: "This is another comment",
+    };
+    return request(app)
+      .post("/api/articles/22222/comments")
+      .send(commentToAdd)
+      .expect(404);
+  });
+  test("POST: 400 responds with a 400 status code if invalid id is given", () => {
+    const commentToAdd = {
+      username: "lurker",
+      body: "This is another comment",
+    };
+    return request(app)
+      .post("/api/articles/six/comments")
+      .send(commentToAdd)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("invalid request");
+      });
+  });
+  test("POST: 400 responds with a 400 status code if username or body is missing", () => {
+    const commentToAdd = {
+      username: "",
+      body: "",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(commentToAdd)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("comment body or username missing");
+      });
+  });
 });

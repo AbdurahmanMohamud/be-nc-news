@@ -42,9 +42,32 @@ const findCommentsById = (id) => {
       if (rows.length === 0)
         return Promise.reject({
           status: 404,
-          message: "This id does not exist",
+          msg: "This id does not exist",
         });
       else return rows;
     });
 };
-module.exports = { findArticle, findArticles, findCommentsById };
+
+const addCommentById = (body, article_id, username) => {
+  if (!body || !username) {
+    return Promise.reject({
+      status: 400,
+      msg: "comment body or username missing",
+    });
+  }
+
+  return db
+    .query(
+      `INSERT INTO comments (body, article_id, author) VALUES ($1, $2, $3) RETURNING *`,
+      [body, article_id, username]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
+module.exports = {
+  findArticle,
+  findArticles,
+  findCommentsById,
+  addCommentById,
+};
