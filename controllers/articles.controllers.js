@@ -3,6 +3,7 @@ const {
   findArticles,
   findCommentsById,
   addCommentById,
+  changeArticleById,
 } = require("../models/articles.models");
 
 const getArticle = (req, res, next) => {
@@ -40,16 +41,31 @@ const getCommentsById = (req, res, next) => {
 const postCommentById = (req, res, next) => {
   const { article_id } = req.params;
   const { username, body } = req.body;
-  
+
   addCommentById(body, article_id, username)
     .then((comment) => {
       res.status(201).send(comment);
     })
     .catch((err) => {
-      console.log(err,"controller")
       next(err);
-      return err
     });
 };
 
-module.exports = { getArticle, getArticles, getCommentsById, postCommentById };
+const patchArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+  changeArticleById(article_id, inc_votes)
+    .then((article) => {
+      res.status(200).send(article);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+module.exports = {
+  getArticle,
+  getArticles,
+  getCommentsById,
+  postCommentById,
+  patchArticleById,
+};
